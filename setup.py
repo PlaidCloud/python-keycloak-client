@@ -3,7 +3,7 @@ import sys
 
 from setuptools import find_packages, setup
 
-VERSION = '0.3.0'
+VERSION = '0.3.1'
 AIO_COMPATIBLE = sys.version_info >= (3, 5, 3)
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
@@ -42,7 +42,7 @@ setup(
             'sphinx-autobuild==0.6.0',
         ],
         'aio': [
-            'aiohttp>=3.4.4,<4; python_full_version>="3.5.3"'
+            'aiohttp>=3.4.4,<4; python_full_version>="3.5.3"', 'aiohttp-retry>=2.8.0'
         ]
     },
     setup_requires=[

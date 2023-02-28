@@ -3,6 +3,7 @@ from functools import partial
 from typing import Any
 
 import aiohttp
+from aiohttp_retry import RetryClient, ExponentialRetry
 
 from keycloak.aio.abc import AsyncInit
 from keycloak.client import KeycloakClient as SyncKeycloakClient
@@ -68,7 +69,8 @@ class KeycloakClient(AsyncInit, SyncKeycloakClient):
     async def __async_init__(self) -> 'KeycloakClient':
         async with self._lock:
             if self._session is None:
-                self._session = self._session_factory()
+                client = self._session_factory()
+                self._session = RetryClient(client_session=client,retry_options=ExponentialRetry())
                 await self._session.__aenter__()
         return self
 
