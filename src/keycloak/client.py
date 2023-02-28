@@ -10,6 +10,7 @@ except ImportError:
     from urlparse import urljoin  # noqa: F401
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 
 class KeycloakClient(object):
@@ -51,7 +52,12 @@ class KeycloakClient(object):
         :rtype: requests.Session
         """
         if self._session is None:
+            retry = Retry(
+                total=3,
+                backoff_factor=1
+            )
             self._session = requests.Session()
+            self._session.mount("http://", HTTPAdapter(max_retries=retry))
             self._session.headers.update(self._headers)
         return self._session
 
