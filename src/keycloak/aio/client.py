@@ -70,7 +70,12 @@ class KeycloakClient(AsyncInit, SyncKeycloakClient):
         async with self._lock:
             if self._session is None:
                 client = self._session_factory()
-                self._session = RetryClient(client_session=client,retry_options=ExponentialRetry())
+                self._session = RetryClient(
+                    client_session=client,
+                    retry_options=ExponentialRetry(
+                        exceptions={aiohttp.ClientOSError}
+                    )
+                )
                 await self._session.__aenter__()
         return self
 
